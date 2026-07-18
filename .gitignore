@@ -1,1 +1,20 @@
 .env
+# Secrets
+.env
+recapai_api.txt
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Database
+*.db
+
+# Audio
+*.mp3
+*.wav
+*.webm
+
+# Uploads
+uploads/
