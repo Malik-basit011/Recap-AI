@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recap AI - Live Transcription</title>
+</head>
+<body>
+    <h2>Live Transcription</h2>
+    <button id="startBtn">Start Recording</button>
+    <button id="stopBtn" disabled>Stop Recording</button>
+    <p id="transcript"></p>
+
+    <script>
+        let ws;
+        let stream;
+        let isRecording = false;
+
+        function recordChunk() {
+            const recorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
+            let chunks = [];
+
+            recorder.ondataavailable = (event) => {
+                if (event.data.size > 0) chunks.push(event.data);
+            };
+
+            recorder.onstop = () => {
+                const blob = new Blob(chunks, { type: "audio/webm" });
+                if (ws.readyState === WebSocket.OPEN) {
+                    ws.send(blob);
+                }
+                if (isRecording) recordChunk();
+            };
+
+            recorder.start();
+            setTimeout(() => recorder.stop(), 10000); // 10-second independent chunks
+        }
+
+        document.getElementById("startBtn").onclick = async () => {
+            stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            ws = new WebSocket("ws://127.0.0.1:8000/ws/live-transcribe");
+
+            ws.onmessage = (event) => {
+                document.getElementById("transcript").innerText += " " + event.data;
+            };
+
+            ws.onopen = () => {
+                isRecording = true;
+                recordChunk();
+            };
+
+            document.getElementById("startBtn").disabled = true;
+            document.getElementById("stopBtn").disabled = false;
+        };
+
+        document.getElementById("stopBtn").onclick = () => {
+            isRecording = false;
+            ws.close();
+            stream.getTracks().forEach(track => track.stop());
+            document.getElementById("startBtn").disabled = false;
+            document.getElementById("stopBtn").disabled = true;
+        };
+    </script>
+</body>
+</html>

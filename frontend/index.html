@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recap AI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">Recap<span>AI</span></div>
+        <nav>
+            <button id="navUpload" class="active">Upload</button>
+            <button id="navMeetings">Meetings</button>
+            <button id="navLive">Live Transcription</button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Upload View -->
+        <section id="uploadView" class="view">
+            <h2>Upload a Meeting</h2>
+            <p class="subtext">Upload an audio file to get a transcript, summary, and speaker-labeled breakdown.</p>
+
+            <div class="card upload-card">
+                <input type="file" id="audioFile" accept="audio/*">
+                <button id="uploadBtn" class="primary-btn">Upload & Process</button>
+            </div>
+            <p id="uploadStatus" class="status-text"></p>
+        </section>
+
+        <!-- Meetings List View -->
+        <section id="meetingsView" class="view hidden">
+            <h2>Your Meetings</h2>
+            <p class="subtext">Select a meeting to view its transcript, summary, or ask a question.</p>
+            <ul id="meetingsList" class="meetings-list"></ul>
+        </section>
+
+        <!-- Meeting Detail View -->
+        <section id="detailView" class="view hidden">
+            <button id="backFromDetail" class="back-btn">← Back to Meetings</button>
+            <h2 id="detailTitle">Meeting</h2>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="transcript">Transcript</button>
+                <button class="tab-btn" data-tab="summary">Summary</button>
+                <button class="tab-btn" data-tab="search">Search</button>
+                <button class="tab-btn" data-tab="ask">Ask</button>
+            </div>
+
+            <div id="tab-transcript" class="tab-content">
+                <div id="transcriptOutput" class="output-box">Loading transcript...</div>
+            </div>
+
+            <div id="tab-summary" class="tab-content hidden">
+                <div id="summaryOutput" class="output-box">Loading summary...</div>
+            </div>
+
+            <div id="tab-search" class="tab-content hidden">
+                <div class="card">
+                    <input type="text" id="searchInput" placeholder="Search keyword, e.g. 'budget'">
+                    <button id="searchBtn" class="primary-btn">Search</button>
+                </div>
+                <div id="searchOutput" class="output-box"></div>
+            </div>
+
+            <div id="tab-ask" class="tab-content hidden">
+                <div class="card">
+                    <input type="text" id="askInput" placeholder="Ask something about this meeting...">
+                    <button id="askBtn" class="primary-btn">Ask</button>
+                </div>
+                <div id="askOutput" class="output-box"></div>
+            </div>
+        </section>
+
+        <!-- Live Transcription View -->
+        <section id="liveView" class="view hidden">
+            <button id="backFromLive" class="back-btn">← Back</button>
+            <h2>Live Transcription</h2>
+            <iframe src="live.html" id="liveFrame"></iframe>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
