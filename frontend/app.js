@@ -15,6 +15,10 @@ const navButtons = {
 
 let currentMeetingId = null;
 
+function spinnerHTML(text) {
+    return `<span class="spinner"></span>${text}`;
+}
+
 function showView(name) {
     Object.entries(views).forEach(([key, el]) => {
         el.classList.toggle("hidden", key !== name);
@@ -47,7 +51,7 @@ document.getElementById("uploadBtn").onclick = async () => {
         return;
     }
 
-    statusEl.innerText = "Uploading and processing... this may take a minute.";
+    statusEl.innerHTML = spinnerHTML("Uploading and processing... this may take a minute.");
 
     const formData = new FormData();
     formData.append("file", fileInput.files[0]);
@@ -67,7 +71,7 @@ document.getElementById("uploadBtn").onclick = async () => {
 // --- Meetings List ---
 async function loadMeetings() {
     const listEl = document.getElementById("meetingsList");
-    listEl.innerHTML = "<li>Loading...</li>";
+    listEl.innerHTML = `<li>${spinnerHTML("Loading meetings...")}</li>`;
 
     try {
         const response = await fetch(`${API_BASE}/meetings`);
@@ -119,7 +123,7 @@ document.querySelectorAll(".tab-btn").forEach((btn) => {
 
 async function loadTranscript() {
     const el = document.getElementById("transcriptOutput");
-    el.innerText = "Loading transcript...";
+    el.innerHTML = spinnerHTML("Loading transcript...");
     try {
         const response = await fetch(`${API_BASE}/meetings/${currentMeetingId}/transcript`);
         const data = await response.json();
@@ -133,7 +137,7 @@ async function loadTranscript() {
 
 async function loadSummary() {
     const el = document.getElementById("summaryOutput");
-    el.innerText = "Loading summary...";
+    el.innerHTML = spinnerHTML("Loading summary...");
     try {
         const response = await fetch(`${API_BASE}/meetings/${currentMeetingId}/summary`);
         const data = await response.json();
@@ -151,7 +155,7 @@ document.getElementById("searchBtn").onclick = async () => {
     const el = document.getElementById("searchOutput");
     if (!keyword) return;
 
-    el.innerText = "Searching...";
+    el.innerHTML = spinnerHTML("Searching...");
     try {
         const response = await fetch(
             `${API_BASE}/meetings/${currentMeetingId}/search?keyword=${encodeURIComponent(keyword)}`
@@ -168,7 +172,7 @@ document.getElementById("askBtn").onclick = async () => {
     const el = document.getElementById("askOutput");
     if (!question) return;
 
-    el.innerText = "Thinking...";
+    el.innerHTML = spinnerHTML("Thinking...");
     try {
         const response = await fetch(
             `${API_BASE}/meetings/${currentMeetingId}/ask?question=${encodeURIComponent(question)}`,
@@ -178,5 +182,18 @@ document.getElementById("askBtn").onclick = async () => {
         el.innerText = data.answer;
     } catch (err) {
         el.innerText = "Failed to get an answer.";
+    }
+};
+
+// --- Delete Meeting ---
+document.getElementById("deleteMeetingBtn").onclick = async () => {
+    if (!confirm("Delete this meeting? This can't be undone.")) return;
+
+    try {
+        await fetch(`${API_BASE}/meetings/${currentMeetingId}`, { method: "DELETE" });
+        showView("meetings");
+        loadMeetings();
+    } catch (err) {
+        alert("Failed to delete meeting.");
     }
 };

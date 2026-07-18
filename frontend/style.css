@@ -143,11 +143,28 @@ input[type="file"] {
     padding: 0;
 }
 
+.delete-btn {
+    background: none;
+    border: 1px solid #dc2626;
+    color: #dc2626;
+    font-size: 13px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    float: right;
+    transition: background 0.15s;
+}
+
+.delete-btn:hover {
+    background: #fef2f2;
+}
+
 .tabs {
     display: flex;
     gap: 4px;
     border-bottom: 1px solid #e5e5e5;
     margin-bottom: 20px;
+    clear: both;
 }
 
 .tab-btn {
@@ -191,4 +208,20 @@ input[type="file"] {
 
 .view.hidden {
     display: none;
+}
+
+.spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #ddd;
+    border-top-color: #4f46e5;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
